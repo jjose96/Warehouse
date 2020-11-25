@@ -1,0 +1,56 @@
+<html>
+    <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script>
+            var app = angular.module('myApp', []);
+            app.controller('myCtrl', function($scope, $http) {
+              $http.get("states")
+              .then(function(response) {
+                  $scope.hello = response.data;
+              });
+              $scope.GetValue = function() {
+                            var selectin = $scope.myselect;
+                             var manurl= "states/"+selectin
+                             console.log(manurl);
+                             $http.get(manurl)
+                             .then(function(response){
+                                 $scope.city= response.data;
+                             })
+              }
+              $scope.GetDown=function(){                         
+              var godownsel= $scope.cities;
+              var wareurl= "warehouse/"+godownsel;
+               console.log(wareurl);
+              $http.get(wareurl)
+               .then(function(response){
+               $scope.ware= response.data;
+      })
+      }
+            });
+            app.controller('customersCtrl', function($scope, $http) {
+            $http.get("customers.php")
+            .then(function (response) {$scope.names = response.data.records;});
+         });        
+            </script>
+               <div ng-app="myApp" ng-controller="myCtrl">
+                States: <select ng-model="myselect" ng-change="GetValue()" name="state">
+                <option ng-repeat="x in hello">{{x.state}}</option>
+                </select></br></br>
+                Cities: <select ng-model="cities" name="city" ng-change="GetDown()">
+                  <option ng-repeat="x in city">{{x.city}}</option>
+                  </select><br><br>
+                Godown: <select ng-model="another" name="godown">
+                    <option ng-repeat="x in ware">{{x.name}}</option>
+                    </select>
+            </div>
+            <div ng-app="myApp" ng-controller="customersCtrl">
+
+                <table>
+                  <tr ng-repeat="x in names">
+                    <td>{{ x.Name }}</td>
+                    <td>{{ x.Country }}</td>
+                  </tr>
+                </table>
+            </div>                
+    </body>
+</html>
